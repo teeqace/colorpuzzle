@@ -1,0 +1,209 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "LabelLevelUp",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 2,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "bg4": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 800
+            },
+            {
+              "frame": 0.5,
+              "value": 0
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.5,
+              "value": 0
+            },
+            {
+              "frame": 2,
+              "value": -800
+            }
+          ]
+        }
+      },
+      "bg3": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 800
+            },
+            {
+              "frame": 0.25,
+              "value": 800
+            },
+            {
+              "frame": 0.5,
+              "value": 0
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.7833333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.9333333333333333,
+              "value": -800
+            }
+          ]
+        }
+      },
+      "bg2": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 800
+            },
+            {
+              "frame": 0.11666666666666667,
+              "value": 800
+            },
+            {
+              "frame": 0.5,
+              "value": 0
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.5666666666666667,
+              "value": 0
+            },
+            {
+              "frame": 1.7666666666666666,
+              "value": -900
+            }
+          ]
+        }
+      },
+      "bg1": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 800
+            },
+            {
+              "frame": 0.4166666666666667,
+              "value": 800
+            },
+            {
+              "frame": 0.5,
+              "value": 0
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.5,
+              "value": 0
+            },
+            {
+              "frame": 1.75,
+              "value": -800
+            }
+          ]
+        }
+      },
+      "string1": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 800
+            },
+            {
+              "frame": 0.6666666666666666,
+              "value": 800
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": 0
+            },
+            {
+              "frame": 1.3333333333333333,
+              "value": 0
+            },
+            {
+              "frame": 1.5,
+              "value": -800
+            }
+          ]
+        }
+      },
+      "string2": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 794
+            },
+            {
+              "frame": 0.5,
+              "value": 794
+            },
+            {
+              "frame": 0.6666666666666666,
+              "value": -6
+            },
+            {
+              "frame": 1.1666666666666667,
+              "value": -6
+            },
+            {
+              "frame": 1.3333333333333333,
+              "value": -806
+            }
+          ]
+        }
+      },
+      "string3": {
+        "props": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 788
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 788
+            },
+            {
+              "frame": 0.5,
+              "value": -12
+            },
+            {
+              "frame": 1,
+              "value": -12
+            },
+            {
+              "frame": 1.1666666666666667,
+              "value": -812
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

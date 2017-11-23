@@ -1,0 +1,80 @@
+{
+  "collision-matrix": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      true,
+      true,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  ],
+  "design-resolution-height": 640,
+  "design-resolution-width": 960,
+  "excluded-modules": [
+    "CCSpriteDistortion",
+    "LabelOutline",
+    "ParticleSystem",
+    "TiledMap",
+    "Spine Skeleton",
+    "ProgressBar",
+    "Toggle",
+    "ScrollView",
+    "ScrollBar",
+    "ToggleGroup",
+    "PageView",
+    "PageViewIndicator",
+    "Slider",
+    "Layout",
+    "EditorBox",
+    "VideoPlayer",
+    "WebView",
+    "MotionStreak",
+    "DragonBones",
+    "StudioComponent"
+  ],
+  "fit-height": true,
+  "fit-width": false,
+  "group-list": [
+    "default",
+    "player",
+    "cursor",
+    "enemy",
+    "bgColor"
+  ],
+  "simulator-orientation": false,
+  "simulator-resolution": {
+    "height": 640,
+    "width": 960
+  },
+  "start-scene": "current",
+  "use-customize-simulator": false,
+  "use-project-simulator-setting": false
+}
