@@ -2,6 +2,11 @@ import PrefabNodePool from '../core/PrefabNodePool';
 import GameFlow from '../core/GameFlow';
 
 const DELETE_COUNT = 3;
+const STRIPE_H = 1;
+const STRIPE_V = 2;
+const RANGE = 3;
+const COLORBOMB = 4;
+
 
 const Pieces = cc.Class({
   extends: cc.Component,
@@ -57,10 +62,11 @@ const Pieces = cc.Class({
     this._deleteTimer = 0;
     this._nextPieceYAdj = [];
     this._deletedIDList = [];
+    this._deletingSpecialPieceIDList = [];
     for (let y = 0; y < this.yPiece; y++) {
       this._nextPieceYAdj.push(0);
     }
-    this._specialPieceCheckList = [];
+    this._deletingSpecialPieceIDList = [];
 
     this._pieces = {};
     this._fieldInit();
@@ -277,20 +283,47 @@ const Pieces = cc.Class({
       let deleteList = this._checkedList[0];
       let deleteIDList = [];
       let id = '';
+      // check special piece
+      let lengest = 0;
+      for (let i = 0; i < deleteList.length; i++) {
+        if (lengest < deleteList[i].length) {
+          lengest = deleteList[i].length;
+        }
+      }
+      let specialPiece = 0;
+      if (lengest >= 5) {
+        specialPiece = COLORBOMB;
+      } else if (deleteList.length > 1) {
+        specialPiece = RANGE;
+      } else if (lengest === 4) {
+        let xy1 = this.getXYfromID(deleteList[0][0]);
+        let xy2 = this.getXYfromID(deleteList[0][1]);
+        if (xy1[0] === xy2[0]) {
+          specialPiece = STRIPE_H;
+        } else {
+          specialPiece = STRIPE_V;
+        }
+      }    
+
+      // delete
+      let specialId = '';
       for (let i = 0; i < deleteList.length; i++) {
         deleteIDList = deleteList[i];
         for (let j = 0; j < deleteIDList.length; j++) {
           id = deleteIDList[j];
-          if (this._deletedIDList.indexOf(id) >= 0) {
+          if (i === 0 && j === 0 && specialPiece !== 0) {
+            this._pieces[id].changePieceType(specialPiece, specialPiece === COLORBOMB);
+            specialId = id;
             continue;
           }
-          this._deletedIDList.push(id);
-          let xy = this.getXYfromID(id);
-          this._spawnPieceDelete(xy[0], xy[1], this._pieces[id].colorType);
-          
-          let newType = Math.floor(Math.random() * this.colors.length);
-          this._pieces[id].deleteUp(this._basePos.y, this.yPiece + this._nextPieceYAdj[xy[0]], newType, this.colors[newType]);
-          this._nextPieceYAdj[xy[0]] += 1;
+          if (id === specialId) {
+            continue;
+          }
+          if (this._pieces[id].pieceType !== 0) {
+            this._deletingSpecialPieceIDList.push(id);
+            continue;
+          }
+          this.deleteOnePiece(id);
         }
       }
       this._checkedList.splice(0, 1);
@@ -323,6 +356,10 @@ const Pieces = cc.Class({
           if (fallStart) {
             newPieces[newId].fall(newId);
             this._fallCount += 1;
+            let specialIndex = this._deletingSpecialPieceIDList.indexOf(id);
+            if (specialIndex >= 0) {
+              this._deletingSpecialPieceIDList[specialIndex] = newId;
+            }
           }
           newY += 1;
         }
@@ -352,14 +389,89 @@ const Pieces = cc.Class({
     for (let x = 0; x < this._nextPieceYAdj.length; x++) {
       this._nextPieceYAdj[x] = 0;
     }
-    if (research) {
+    if (this._deletingSpecialPieceIDList.length > 0) {
+      this._specialPieceDeleteStart = true;
+      setTimeout(() => {
+        this.specialPieceEffect();
+      }, this.deleteInterval * 1000);
+
+    } else if (research) {
       this.searchMatch();
       this._deleteTimer = this.deleteInterval;
       this._deleteCheckStart = true;
     } else {
       GameFlow.instance.nextPhase();
     }
-    this._specialPieceCheckList = [];
+  },
+
+  specialPieceEffect() {
+    this.nextSpecialPieces = [];
+    for (let i = 0; i < this._deletingSpecialPieceIDList.length; i++) {
+      let id = this._deletingSpecialPieceIDList[i];
+      let xy = this.getXYfromID(id);
+      let deleteId = '';
+      if (this._pieces[id].pieceType === STRIPE_H) {
+        for (let x = 0; x < this.xPiece; x++) {
+          this.deleteOnePieceBySpecialPiece(id, x, xy[1]);
+        }
+  
+      } else if (this._pieces[id].pieceType === STRIPE_V) {
+        for (let y = 0; y < this.yPiece; y++) {
+          this.deleteOnePieceBySpecialPiece(id, xy[0], y);
+        }
+        
+      } else if (this._pieces[id].pieceType === RANGE) {
+        let minX =  Math.max(0, xy[0] - 1);
+        let maxX =  Math.min(this.xPiece - 1, xy[0] + 1);
+        let minY =  Math.max(0, xy[1] - 1);
+        let maxY =  Math.min(this.yPiece - 1, xy[1] + 1);
+        for (let x = minX; x <= maxX; x++) {
+          for (let y = minY; y <= maxY; y++) {
+            this.deleteOnePieceBySpecialPiece(id, x, y);
+          }
+        }
+      } else if (this._pieces[id].pieceType === COLORBOMB) {
+        let colorType = this._pieces[id].colorType;
+        for (let x = 0; x < this.xPiece; x++) {
+          for (let y = 0; y < this.yPiece; y++) {
+            if (this._pieces[`${x}-${y}`].colorType === colorType) {
+              this.deleteOnePieceBySpecialPiece(id, x, y);
+            }
+          }
+        }
+        
+      } else {
+        continue;
+      }
+      this.deleteOnePiece(id);
+
+    }
+    this._deletingSpecialPieceIDList = this.nextSpecialPieces;
+    this.fall();
+  },
+
+  deleteOnePieceBySpecialPiece(baseID, x, y) {
+    let deleteId = `${x}-${y}`;
+    if (baseID === deleteId) {
+      return;
+    }
+    if (this._pieces[deleteId].pieceType !== 0) {
+      this.nextSpecialPieces.push(deleteId);
+      return;
+    }
+    this.deleteOnePiece(deleteId);
+  },
+
+  deleteOnePiece(id) {
+    if (this._deletedIDList.indexOf(id) >= 0) {
+      return;
+    }
+    this._deletedIDList.push(id);
+    let xy = this.getXYfromID(id);
+    this._spawnPieceDelete(xy[0], xy[1], this._pieces[id].colorType);
+    let newType = Math.floor(Math.random() * this.colors.length);
+    this._pieces[id].deleteUp(this._basePos.y, this.yPiece + this._nextPieceYAdj[xy[0]], newType, this.colors[newType]);
+    this._nextPieceYAdj[xy[0]] += 1;
   },
 
   getXYfromID(id) {

@@ -40,6 +40,7 @@ cc.Class({
     this.marker.width = this.pieces.pieceW;
     this.marker.height = this.pieces.pieceH;
     this.marker.position = location;
+    this.marker.getComponent(cc.Sprite).spriteFrame = touchPiece.pieceSprite.spriteFrame;
     this.marker.color = touchPiece.pieceSprite.node.color;
 
     this._isTouch = true;
@@ -64,7 +65,7 @@ cc.Class({
       return;
     }
     this.pieces.swap(this._touchId, touchId);
-    SEPlay.instance.play('swap');
+    // SEPlay.instance.play('swap');
     this._touchId = touchId;
     // cc.log(location)
   },

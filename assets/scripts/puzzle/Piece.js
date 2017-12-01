@@ -31,7 +31,8 @@ cc.Class({
       }
     },
     pieceSprite: cc.Sprite,
-    deleteMark: cc.Node
+    deleteMark: cc.Node,
+    anim: cc.Animation
   },
 
   // use this for initialization
@@ -97,6 +98,9 @@ cc.Class({
     this._colorType = type;
     this.pieceSprite.node.color = color;
     this.node.y = baseY + this.pieceSprite.node.height * y;
+    if (this._pieceType !== 0) {
+      this.changePieceType(0, false);
+    }
     this.deleteMarkOff();
   },
 
@@ -109,12 +113,20 @@ cc.Class({
     this.moveTo(id, true);
   },
 
-  update(dt) {
-    // if (this._moveCues.length === 0) {
-    //   return;
+  changePieceType(type, isColorBomb) {
+    this._pieceType = type;
+    this.pieceSprite.spriteFrame = this.pieceSprites[this._pieceType];
+    if (this._pieceType !== 0) {
+      this.anim.play('PieceSpecialAppear');
+    }
+    this.deleteMarkOff();
+    // if (isColorBomb) {
+    //   this.pieceSprite.node.color = cc.hexToColor('#FFFFFF');
     // }
-
   },
+
+  // update(dt) {
+  // },
 
   setPool(pool) {
     this._pool = pool;

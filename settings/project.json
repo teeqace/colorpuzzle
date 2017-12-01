@@ -11,29 +11,29 @@
       false,
       false,
       false,
-      true,
+      false,
       false
     ],
     [
       false,
       false,
       false,
-      true,
+      false,
       false
     ],
     [
       false,
-      true,
-      true,
       false,
-      true
+      false,
+      false,
+      false
     ],
     [
       false,
       false,
       false,
-      true,
-      true
+      false,
+      false
     ]
   ],
   "design-resolution-height": 640,
@@ -58,7 +58,18 @@
     "WebView",
     "MotionStreak",
     "DragonBones",
-    "StudioComponent"
+    "StudioComponent",
+    "Label",
+    "Widget",
+    "Button",
+    "RichText",
+    "Collider",
+    "Physics",
+    "Graphics",
+    "Chipmunk",
+    "Camera",
+    "Intersection",
+    "RenderTexture"
   ],
   "fit-height": true,
   "fit-width": false,
