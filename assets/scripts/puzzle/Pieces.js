@@ -1,5 +1,7 @@
 import PrefabNodePool from '../core/PrefabNodePool';
 import GameFlow from '../core/GameFlow';
+import Player from '../player/Player';
+import Enemy from '../enemy/Enemy';
 
 const DELETE_COUNT = 3;
 const STRIPE_H = 1;
@@ -309,6 +311,7 @@ const Pieces = cc.Class({
       let specialId = '';
       for (let i = 0; i < deleteList.length; i++) {
         deleteIDList = deleteList[i];
+        let deleteCount = 0;
         for (let j = 0; j < deleteIDList.length; j++) {
           id = deleteIDList[j];
           if (i === 0 && j === 0 && specialPiece !== 0) {
@@ -324,7 +327,9 @@ const Pieces = cc.Class({
             continue;
           }
           this.deleteOnePiece(id);
+          deleteCount += 1;
         }
+        Player.instance.attackToEnemy(deleteCount);
       }
       this._checkedList.splice(0, 1);
     }
@@ -400,6 +405,9 @@ const Pieces = cc.Class({
       this._deleteTimer = this.deleteInterval;
       this._deleteCheckStart = true;
     } else {
+      if (Enemy.instance.isDead) {
+        Enemy.instance.die();
+      }
       GameFlow.instance.nextPhase();
     }
   },
@@ -410,14 +418,17 @@ const Pieces = cc.Class({
       let id = this._deletingSpecialPieceIDList[i];
       let xy = this.getXYfromID(id);
       let deleteId = '';
+      let deleteCount = 0;
       if (this._pieces[id].pieceType === STRIPE_H) {
         for (let x = 0; x < this.xPiece; x++) {
           this.deleteOnePieceBySpecialPiece(id, x, xy[1]);
+          deleteCount += 1;
         }
   
       } else if (this._pieces[id].pieceType === STRIPE_V) {
         for (let y = 0; y < this.yPiece; y++) {
           this.deleteOnePieceBySpecialPiece(id, xy[0], y);
+          deleteCount += 1;
         }
         
       } else if (this._pieces[id].pieceType === RANGE) {
@@ -428,6 +439,7 @@ const Pieces = cc.Class({
         for (let x = minX; x <= maxX; x++) {
           for (let y = minY; y <= maxY; y++) {
             this.deleteOnePieceBySpecialPiece(id, x, y);
+            deleteCount += 1;
           }
         }
       } else if (this._pieces[id].pieceType === COLORBOMB) {
@@ -436,6 +448,7 @@ const Pieces = cc.Class({
           for (let y = 0; y < this.yPiece; y++) {
             if (this._pieces[`${x}-${y}`].colorType === colorType) {
               this.deleteOnePieceBySpecialPiece(id, x, y);
+              deleteCount += 1;
             }
           }
         }
@@ -444,7 +457,8 @@ const Pieces = cc.Class({
         continue;
       }
       this.deleteOnePiece(id);
-
+      deleteCount += 1;
+      Player.instance.attackToEnemy(deleteCount);
     }
     this._deletingSpecialPieceIDList = this.nextSpecialPieces;
     this.fall();

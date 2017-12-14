@@ -1,7 +1,7 @@
 const FLOW = [
   'touch',
   'delete',
-  // 'enemy'
+  'enemy'
 ];
 
 const GameFlow = cc.Class({
@@ -22,6 +22,11 @@ const GameFlow = cc.Class({
     isDeleteTurn: {
       get: function () {
         return this._flowIndex === this._flowDELETE;
+      }
+    },
+    isEnemyTurn: {
+      get: function () {
+        return this._flowIndex === this._flowENEMY;
       }
     }
   },
