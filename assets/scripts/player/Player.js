@@ -6,6 +6,7 @@ const FACE = {
   damage: 2,
   win: 3
 };
+const CHAIN_RATE = 0.2;
 
 const Player = cc.Class({
   extends: cc.Component,
@@ -19,7 +20,10 @@ const Player = cc.Class({
     maxHp: 1000,
     attack: 10,
     hpFill: cc.Sprite,
-    faceAnim: cc.Animation
+    hpLabel: cc.Label,
+    faceAnim: cc.Animation,
+    hpAnimLabel: cc.Label,
+    hpAnim: cc.Animation
   },
   
   statics: {
@@ -30,15 +34,27 @@ const Player = cc.Class({
   onLoad: function () {
     Player.instance = this;
     this.faceAnim.on('finished', this._animFinish, this);
+    this.hpAnim.on('finished', this._animFinish, this);
 
     this._hp = this.maxHp;
-    this.hpFill.fillRange = this._hp / this.maxHp;
+    this._hpDisplay();
   },
 
-  attackToEnemy(pieces) {
+  recover(pieces, chain) {
+    this.face.spriteFrame = this.faceSprites[FACE.win];
+    let rate = 1.0 + CHAIN_RATE * (chain - 1);
+    let health = Math.floor(this.attack * pieces * rate);
+    this._hp = Math.min(this.maxHp, this._hp + health);
+    this._hpDisplay();
+    this.hpAnimLabel.string = `+${health}`;
+    this.hpAnim.play('HpRecover');
+  },
+
+  attackToEnemy(pieces, chain) {
     this.face.spriteFrame = this.faceSprites[FACE.attack];
     this.faceAnim.play('PlayerAttackFace');
-    let damage = this.attack * pieces;
+    let rate = 1.0 + CHAIN_RATE * (chain - 1);
+    let damage = Math.floor(this.attack * pieces * rate);
     Enemy.instance.damage(damage);
   },
 
@@ -46,7 +62,9 @@ const Player = cc.Class({
     this.face.spriteFrame = this.faceSprites[FACE.damage];
     this.faceAnim.play('PlayerDamageFace');
     this._hp = Math.max(0, this._hp - damage);
-    this.hpFill.fillRange = this._hp / this.maxHp;
+    this._hpDisplay();
+    this.hpAnimLabel.string = `-${damage}`;
+    this.hpAnim.play('HpDamage');
   },
 
   normalFace() {
@@ -55,7 +73,10 @@ const Player = cc.Class({
 
   win() {
     this.face.spriteFrame = this.faceSprites[FACE.win];
-    this._hp = Math.min(this.maxHp, this._hp + this.maxHp / 10);
+    // this._hp = Math.min(this.maxHp, this._hp + this.maxHp / 10);
+    // this._hpDisplay();
+    // this.hpAnimLabel.string = `+${this.maxHp / 10}`;
+    // this.hpAnim.play('HpRecover');
   },
   
   _animFinish(event) {
@@ -72,6 +93,11 @@ const Player = cc.Class({
     // }
     this.face.spriteFrame = this.faceSprites[FACE.normal];
   },
+
+  _hpDisplay() {
+    this.hpFill.fillRange = this._hp / this.maxHp;
+    this.hpLabel.string = `HP:${this._hp} / ${this.maxHp}`;
+  }
 
   // called every frame, uncomment this function to activate update callback
   // update: function (dt) {

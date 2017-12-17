@@ -1,0 +1,59 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "HpRecover",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "HpAnimation": {
+        "props": {
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.5,
+              "value": 255
+            },
+            {
+              "frame": 0.9166666666666666,
+              "value": 255
+            },
+            {
+              "frame": 1,
+              "value": 0
+            }
+          ],
+          "color": [
+            {
+              "frame": 0,
+              "value": {
+                "__type__": "cc.Color",
+                "r": 20,
+                "g": 92,
+                "b": 201,
+                "a": 255
+              }
+            }
+          ],
+          "y": [
+            {
+              "frame": 0,
+              "value": 30
+            },
+            {
+              "frame": 0.5,
+              "value": 60
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

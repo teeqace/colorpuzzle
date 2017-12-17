@@ -1,6 +1,41 @@
 import GameFlow from '../core/GameFlow';
 import Player from '../player/Player';
+import PrefabNodePool from '../core/PrefabNodePool';
 
+// export const messagePipeline = new MessagePipeline()
+
+const ENEMY_STATUS = [
+  {
+    spriteIndex: 0,
+    hp: 700,
+    attack: 100,
+    turn: 3
+  },
+  {
+    spriteIndex: 1,
+    hp: 1000,
+    attack: 80,
+    turn: 2
+  },
+  {
+    spriteIndex: 2,
+    hp: 1200,
+    attack: 300,
+    turn: 5
+  },
+  {
+    spriteIndex: 3,
+    hp: 1500,
+    attack: 200,
+    turn: 3
+  },
+  {
+    spriteIndex: 4,
+    hp: 2300,
+    attack: 700,
+    turn: 8
+  }
+];
 const Enemy = cc.Class({
   extends: cc.Component,
 
@@ -18,10 +53,13 @@ const Enemy = cc.Class({
     enemySprite: cc.Sprite,
     maxAttackTurn: 3,
     maxHp: 1000,
-    attack: 50,
+    attack: 100,
     hpFill: cc.Sprite,
+    hpLabel: cc.Label,
     turnLabel: cc.Label,
-    anim: cc.Animation
+    attackLabel: cc.Label,
+    anim: cc.Animation,
+    enemyDamagePrefab: cc.Prefab
   },
   
   statics: {
@@ -31,6 +69,8 @@ const Enemy = cc.Class({
   // use this for initialization
   onLoad: function () {
     Enemy.instance = this;
+    
+    this.damagePool = new PrefabNodePool(this.enemyDamagePrefab, 3, 2, 'EnemyDamage');
     this.anim.on('finished', this._animFinish, this);
     this._enemyIndex = 0;
     this._enemyReset();
@@ -40,15 +80,23 @@ const Enemy = cc.Class({
     this._isOnAttack = false;
     this._isDead = false;
 
-    this.enemySprite.spriteFrame = this.enemySprites[this._enemyIndex];
-    // this.enemySprite.node.setScale(1);
-    // this.enemySprite.node.opacity = 255;
+    let enemyStatus = ENEMY_STATUS[this._enemyIndex];
+    this.enemySprite.spriteFrame = this.enemySprites[enemyStatus.spriteIndex];
+    this.maxHp = enemyStatus.hp;
+    this.attack = enemyStatus.attack;
+    this.maxAttackTurn = enemyStatus.turn;
 
     this._attackTurn = this.maxAttackTurn;
     this.turnLabel.string = this._attackTurn;
+    this.attackLabel.string = `ATK:${this.attack}`;
 
     this._hp = this.maxHp;
+    this._hpDisplay();
+  },
+  
+  _hpDisplay() {
     this.hpFill.fillRange = this._hp / this.maxHp;
+    this.hpLabel.string = `HP:${this._hp} / ${this.maxHp}`;
   },
 
   turnElapse() {
@@ -64,8 +112,11 @@ const Enemy = cc.Class({
 
   damage(damage) {
     this.anim.play('EnemyDamage');
+    
+    let damageAnim = this.damagePool.get(damage);
+    damageAnim.parent = this.node;
     this._hp = Math.max(0, this._hp - damage);
-    this.hpFill.fillRange = this._hp / this.maxHp;
+    this._hpDisplay();
     if (this._hp <= 0) {
       this._isDead = true;
     }
@@ -85,7 +136,7 @@ const Enemy = cc.Class({
       GameFlow.instance.nextPhase();
       this._isOnAttack = false;
     } else if (animName === 'EnemyDie') {
-      this._enemyIndex = (this._enemyIndex + 1) % this.enemySprites.length;
+      this._enemyIndex = (this._enemyIndex + 1) % ENEMY_STATUS.length;
       this._enemyReset();
       Player.instance.normalFace();
       this.anim.play('EnemyAppear');

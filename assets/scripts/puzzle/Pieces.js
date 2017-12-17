@@ -8,7 +8,7 @@ const STRIPE_H = 1;
 const STRIPE_V = 2;
 const RANGE = 3;
 const COLORBOMB = 4;
-
+const RECOVER_TYPE = 5;
 
 const Pieces = cc.Class({
   extends: cc.Component,
@@ -69,6 +69,8 @@ const Pieces = cc.Class({
       this._nextPieceYAdj.push(0);
     }
     this._deletingSpecialPieceIDList = [];
+
+    this._chain = 0;
 
     this._pieces = {};
     this._fieldInit();
@@ -309,11 +311,13 @@ const Pieces = cc.Class({
 
       // delete
       let specialId = '';
+      let deleteCount = 0;
+      let isRecover = false;
       for (let i = 0; i < deleteList.length; i++) {
         deleteIDList = deleteList[i];
-        let deleteCount = 0;
         for (let j = 0; j < deleteIDList.length; j++) {
           id = deleteIDList[j];
+          isRecover = RECOVER_TYPE === this._pieces[id].colorType;
           if (i === 0 && j === 0 && specialPiece !== 0) {
             this._pieces[id].changePieceType(specialPiece, specialPiece === COLORBOMB);
             specialId = id;
@@ -329,7 +333,12 @@ const Pieces = cc.Class({
           this.deleteOnePiece(id);
           deleteCount += 1;
         }
-        Player.instance.attackToEnemy(deleteCount);
+      }
+      this._chain += 1;
+      if (isRecover) {
+        Player.instance.recover(deleteCount, this._chain);
+      } else {
+        Player.instance.attackToEnemy(deleteCount, this._chain);
       }
       this._checkedList.splice(0, 1);
     }
@@ -409,6 +418,7 @@ const Pieces = cc.Class({
         Enemy.instance.die();
       }
       GameFlow.instance.nextPhase();
+      this._chain = 0;
     }
   },
 
@@ -416,6 +426,7 @@ const Pieces = cc.Class({
     this.nextSpecialPieces = [];
     for (let i = 0; i < this._deletingSpecialPieceIDList.length; i++) {
       let id = this._deletingSpecialPieceIDList[i];
+      let isRecover = RECOVER_TYPE === this._pieces[id].colorType;
       let xy = this.getXYfromID(id);
       let deleteId = '';
       let deleteCount = 0;
@@ -458,7 +469,12 @@ const Pieces = cc.Class({
       }
       this.deleteOnePiece(id);
       deleteCount += 1;
-      Player.instance.attackToEnemy(deleteCount);
+      this._chain += 1;
+      if (isRecover) {
+        Player.instance.recover(deleteCount, this._chain);
+      } else {
+        Player.instance.attackToEnemy(deleteCount, this._chain);
+      }
     }
     this._deletingSpecialPieceIDList = this.nextSpecialPieces;
     this.fall();

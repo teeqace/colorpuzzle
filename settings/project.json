@@ -40,7 +40,6 @@
   "design-resolution-width": 960,
   "excluded-modules": [
     "CCSpriteDistortion",
-    "LabelOutline",
     "ParticleSystem",
     "TiledMap",
     "Spine Skeleton",
