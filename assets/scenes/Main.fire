@@ -963,7 +963,7 @@
     ],
     "_prefab": null,
     "_id": "e1bhnQM3NLvoxCzP9haR+N",
-    "_opacity": 255,
+    "_opacity": 0,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -1296,7 +1296,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 16.68,
+      "width": 0,
       "height": 30
     },
     "_rotationX": 0,
@@ -1331,7 +1331,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "3",
+    "_N$string": "",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1545,7 +1545,7 @@
       "y": 0
     },
     "_fillStart": 0,
-    "_fillRange": 0.5,
+    "_fillRange": 1,
     "_isTrimmedMode": true,
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
@@ -1587,7 +1587,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 93.4,
+      "width": 95.95,
       "height": 24
     },
     "_rotationX": 0,
@@ -1622,7 +1622,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "HP:9999",
+    "_N$string": "HP:-------",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1681,7 +1681,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 91.61,
+      "width": 99.52,
       "height": 24
     },
     "_rotationX": 0,
@@ -1716,7 +1716,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "ATK:999",
+    "_N$string": "ATK:------",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",

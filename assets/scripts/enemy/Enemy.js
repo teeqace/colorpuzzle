@@ -3,39 +3,39 @@ import Player from '../player/Player';
 import PrefabNodePool from '../core/PrefabNodePool';
 
 // export const messagePipeline = new MessagePipeline()
-
-const ENEMY_STATUS = [
-  {
-    spriteIndex: 0,
-    hp: 700,
-    attack: 100,
-    turn: 3
-  },
-  {
-    spriteIndex: 1,
-    hp: 1000,
-    attack: 80,
-    turn: 2
-  },
-  {
-    spriteIndex: 2,
-    hp: 1200,
-    attack: 300,
-    turn: 5
-  },
-  {
-    spriteIndex: 3,
-    hp: 1500,
-    attack: 200,
-    turn: 3
-  },
-  {
-    spriteIndex: 4,
-    hp: 2300,
-    attack: 700,
-    turn: 8
-  }
-];
+const PATH_JSON = 'json/enemy';
+// const ENEMY_STATUS = [
+//   {
+//     spriteIndex: 0,
+//     hp: 700,
+//     attack: 200,
+//     turn: 3
+//   },
+//   {
+//     spriteIndex: 1,
+//     hp: 1000,
+//     attack: 160,
+//     turn: 2
+//   },
+//   {
+//     spriteIndex: 2,
+//     hp: 1200,
+//     attack: 500,
+//     turn: 5
+//   },
+//   {
+//     spriteIndex: 3,
+//     hp: 1500,
+//     attack: 400,
+//     turn: 3
+//   },
+//   {
+//     spriteIndex: 4,
+//     hp: 2300,
+//     attack: 800,
+//     turn: 8
+//   }
+// ];
 const Enemy = cc.Class({
   extends: cc.Component,
 
@@ -73,14 +73,33 @@ const Enemy = cc.Class({
     this.damagePool = new PrefabNodePool(this.enemyDamagePrefab, 3, 2, 'EnemyDamage');
     this.anim.on('finished', this._animFinish, this);
     this._enemyIndex = 0;
-    this._enemyReset();
+
+    
+    this.loadEnemyJson()
+    .then((data) => {
+      this._enemyStatus = data;
+      this._enemyReset();
+    });
+
+  },
+
+  loadEnemyJson() {
+    return new Promise((resolve, reject) => {
+      cc.loader.loadRes(`${PATH_JSON}`, (err, data) => {
+        if (!err) {
+          resolve(data);
+        } else {
+          reject(err);
+        }
+      });
+    });
   },
 
   _enemyReset() {
     this._isOnAttack = false;
     this._isDead = false;
 
-    let enemyStatus = ENEMY_STATUS[this._enemyIndex];
+    let enemyStatus = this._enemyStatus[this._enemyIndex];
     this.enemySprite.spriteFrame = this.enemySprites[enemyStatus.spriteIndex];
     this.maxHp = enemyStatus.hp;
     this.attack = enemyStatus.attack;
@@ -92,6 +111,7 @@ const Enemy = cc.Class({
 
     this._hp = this.maxHp;
     this._hpDisplay();
+    this.anim.play('EnemyAppear');
   },
   
   _hpDisplay() {
@@ -136,10 +156,9 @@ const Enemy = cc.Class({
       GameFlow.instance.nextPhase();
       this._isOnAttack = false;
     } else if (animName === 'EnemyDie') {
-      this._enemyIndex = (this._enemyIndex + 1) % ENEMY_STATUS.length;
+      this._enemyIndex = (this._enemyIndex + 1) % this._enemyStatus.length;
       this._enemyReset();
       Player.instance.normalFace();
-      this.anim.play('EnemyAppear');
     }
   },
 

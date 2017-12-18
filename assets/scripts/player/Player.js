@@ -73,10 +73,10 @@ const Player = cc.Class({
 
   win() {
     this.face.spriteFrame = this.faceSprites[FACE.win];
-    // this._hp = Math.min(this.maxHp, this._hp + this.maxHp / 10);
-    // this._hpDisplay();
-    // this.hpAnimLabel.string = `+${this.maxHp / 10}`;
-    // this.hpAnim.play('HpRecover');
+    this._hp = Math.min(this.maxHp, this._hp + this.maxHp / 10);
+    this._hpDisplay();
+    this.hpAnimLabel.string = `+${this.maxHp / 10}`;
+    this.hpAnim.play('HpRecover');
   },
   
   _animFinish(event) {
