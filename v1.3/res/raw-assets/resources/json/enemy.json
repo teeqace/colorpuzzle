@@ -1,1 +1,32 @@
-[  {    "spriteIndex": 0,    "hp": 700,    "attack": 200,    "turn": 3  },  {    "spriteIndex": 1,    "hp": 1000,    "attack": 160,    "turn": 2  },  {    "spriteIndex": 2,    "hp": 1200,    "attack": 500,    "turn": 5  },  {    "spriteIndex": 3,    "hp": 1500,    "attack": 400,    "turn": 3  },  {    "spriteIndex": 4,    "hp": 2300,    "attack": 800,    "turn": 8  }]
+[
+  {
+    "spriteIndex": 0,
+    "hp": 700,
+    "attack": 200,
+    "turn": 3
+  },
+  {
+    "spriteIndex": 1,
+    "hp": 1000,
+    "attack": 160,
+    "turn": 2
+  },
+  {
+    "spriteIndex": 2,
+    "hp": 1200,
+    "attack": 500,
+    "turn": 5
+  },
+  {
+    "spriteIndex": 3,
+    "hp": 1500,
+    "attack": 400,
+    "turn": 3
+  },
+  {
+    "spriteIndex": 4,
+    "hp": 3000,
+    "attack": 800,
+    "turn": 7
+  }
+]
